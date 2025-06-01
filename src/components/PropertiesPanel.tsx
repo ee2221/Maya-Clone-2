@@ -16,6 +16,18 @@ const TransformInput: React.FC<{
       type="number"
       value={value}
       onChange={(e) => onChange(parseFloat(e.target.value))}
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          onChange(value + step);
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const newValue = value - step;
+          if (min === undefined || newValue >= min) {
+            onChange(newValue);
+          }
+        }
+      }}
       step={step}
       min={min}
       className="w-20 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
