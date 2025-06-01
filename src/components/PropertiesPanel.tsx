@@ -15,7 +15,12 @@ const TransformInput: React.FC<{
     <input
       type="number"
       value={value}
-      onChange={(e) => onChange(parseFloat(e.target.value))}
+      onChange={(e) => {
+        const newValue = parseFloat(e.target.value);
+        if (!isNaN(newValue) && (min === undefined || newValue >= min)) {
+          onChange(newValue);
+        }
+      }}
       onKeyDown={(e) => {
         if (e.key === 'ArrowUp') {
           e.preventDefault();
@@ -96,16 +101,19 @@ const PropertiesPanel: React.FC = () => {
                 label="X"
                 value={THREE.MathUtils.radToDeg(rotation.x)}
                 onChange={(value) => updateObjectRotation('x', value)}
+                step={1}
               />
               <TransformInput
                 label="Y"
                 value={THREE.MathUtils.radToDeg(rotation.y)}
                 onChange={(value) => updateObjectRotation('y', value)}
+                step={1}
               />
               <TransformInput
                 label="Z"
                 value={THREE.MathUtils.radToDeg(rotation.z)}
                 onChange={(value) => updateObjectRotation('z', value)}
+                step={1}
               />
             </div>
           </div>
