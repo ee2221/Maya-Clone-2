@@ -39,6 +39,10 @@ const Scene: React.FC = () => {
         <TransformControls
           object={selectedObject}
           mode={transformMode}
+          onObjectChange={() => {
+            // Force a re-render when the object is transformed
+            setSelectedObject(selectedObject);
+          }}
         />
       )}
 
@@ -47,4 +51,4 @@ const Scene: React.FC = () => {
   );
 };
 
-export default Scene
+export default Scene;
