@@ -18,6 +18,9 @@ interface SceneState {
   updateObjectName: (id: string, name: string) => void;
   updateObjectColor: (color: string) => void;
   updateObjectOpacity: (opacity: number) => void;
+  updateObjectPosition: (axis: 'x' | 'y' | 'z', value: number) => void;
+  updateObjectRotation: (axis: 'x' | 'y' | 'z', value: number) => void;
+  updateObjectScale: (axis: 'x' | 'y' | 'z', value: number) => void;
 }
 
 export const useSceneStore = create<SceneState>((set) => ({
@@ -74,6 +77,27 @@ export const useSceneStore = create<SceneState>((set) => ({
         const material = state.selectedObject.material as THREE.MeshStandardMaterial;
         material.transparent = opacity < 1;
         material.opacity = opacity;
+      }
+      return state;
+    }),
+  updateObjectPosition: (axis, value) =>
+    set((state) => {
+      if (state.selectedObject) {
+        state.selectedObject.position[axis] = value;
+      }
+      return state;
+    }),
+  updateObjectRotation: (axis, value) =>
+    set((state) => {
+      if (state.selectedObject) {
+        state.selectedObject.rotation[axis] = THREE.MathUtils.degToRad(value);
+      }
+      return state;
+    }),
+  updateObjectScale: (axis, value) =>
+    set((state) => {
+      if (state.selectedObject) {
+        state.selectedObject.scale[axis] = value;
       }
       return state;
     }),
