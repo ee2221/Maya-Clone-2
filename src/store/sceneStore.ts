@@ -16,6 +16,8 @@ interface SceneState {
   setTransformMode: (mode: 'translate' | 'rotate' | 'scale') => void;
   toggleVisibility: (id: string) => void;
   updateObjectName: (id: string, name: string) => void;
+  updateObjectColor: (color: string) => void;
+  updateObjectOpacity: (opacity: number) => void;
 }
 
 export const useSceneStore = create<SceneState>((set) => ({
@@ -41,10 +43,8 @@ export const useSceneStore = create<SceneState>((set) => ({
         obj.id === id ? { ...obj, visible: !obj.visible } : obj
       );
       
-      // Get the object being toggled
       const toggledObject = updatedObjects.find((obj) => obj.id === id);
       
-      // If the object is being hidden and it's currently selected, deselect it
       const newSelectedObject = (toggledObject && !toggledObject.visible && toggledObject.object === state.selectedObject)
         ? null
         : state.selectedObject;
@@ -60,4 +60,21 @@ export const useSceneStore = create<SceneState>((set) => ({
         obj.id === id ? { ...obj, name } : obj
       ),
     })),
+  updateObjectColor: (color) =>
+    set((state) => {
+      if (state.selectedObject && state.selectedObject instanceof THREE.Mesh) {
+        const material = state.selectedObject.material as THREE.MeshStandardMaterial;
+        material.color.setStyle(color);
+      }
+      return state;
+    }),
+  updateObjectOpacity: (opacity) =>
+    set((state) => {
+      if (state.selectedObject && state.selectedObject instanceof THREE.Mesh) {
+        const material = state.selectedObject.material as THREE.MeshStandardMaterial;
+        material.transparent = opacity < 1;
+        material.opacity = opacity;
+      }
+      return state;
+    }),
 }));
